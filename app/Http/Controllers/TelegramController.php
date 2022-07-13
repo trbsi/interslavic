@@ -14,7 +14,7 @@ class TelegramController
     public function setWebHook()
     {
         $bot_api_key = env('TELEGRAM_API_KEY');
-        $bot_username = 'IAmBoredRobot';
+        $bot_username = env('TELEGRAM_BOT_NAME');
         $hook_url = route('telegram.webhook');
 
         try {
@@ -33,6 +33,20 @@ class TelegramController
 
     public function webhook(Request $request)
     {
-        Log::info('Telegram', $request->all());
+        $bot_api_key = env('TELEGRAM_API_KEY');
+        $bot_username = env('TELEGRAM_BOT_NAME');
+
+        try {
+            // Create Telegram API object
+            $telegram = new Telegram($bot_api_key, $bot_username);
+
+            // Handle telegram webhook request
+            $telegram->handle();
+            Log::info('Telegram', $request->all());
+        } catch (TelegramException $e) {
+            // Silence is golden!
+            // log telegram errors
+            // echo $e->getMessage();
+        }
     }
 }
