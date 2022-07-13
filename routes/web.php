@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\TelegramController;
+use App\Http\Controllers\TranslateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::any('translate', [TranslateController::class, 'translate'])->name('translate');
+
+Route::prefix('telegram')->group(function () {
+    Route::get('set-webhook', [TelegramController::class, 'setWebHook'])->name('telegram.set-webhook');
+    Route::get('webhook', [TelegramController::class, 'webhook'])->name('telegram.webhook');
 });
